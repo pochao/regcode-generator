@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>註冊碼產生器</title>
+  <!-- Bootstrap 4 CDN -->
+  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h1 class="mb-4">註冊碼產生器</h1>
+    <div id="alert" style="display:none;" class="alert"></div>
+    <form id="regForm">
+      <div class="mb-3">
+        <label class="form-label">Machine Code</label>
+        <input type="text" name="machineCode" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Secret Key</label>
+        <input type="text" name="secretKey" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-primary">產生註冊碼</button>
+    </form>
+    <div class="mt-4" id="result" style="display:none;">
+      <div class="alert alert-success">
+        註冊碼已產生：<br>
+        <strong id="regCode"></strong>
+      </div>
+      <button class="btn btn-secondary" onclick="copyCode()">複製到剪貼簿</button>
+    </div>
+  </div>
+  <script>
+    document.getElementById('regForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      document.getElementById('alert').style.display = 'none';
+      document.getElementById('result').style.display = 'none';
+      const machineCode = this.machineCode.value;
+      const secretKey = this.secretKey.value;
+      const res = await fetch('/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ machineCode, secretKey })
+      });
+      const data = await res.json();
+      if (data.error) {
+        const alert = document.getElementById('alert');
+        alert.className = 'alert alert-danger';
+        alert.innerText = data.error;
+        alert.style.display = '';
+      } else {
+        document.getElementById('regCode').innerText = data.regCode;
+        document.getElementById('result').style.display = '';
+      }
+    });
+
+    function copyCode() {
+      const code = document.getElementById('regCode').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        alert('註冊碼已複製到剪貼簿！');
+      });
+    }
+  </script>
+  <!-- Bootstrap JS 依賴（可選） -->
+  <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
