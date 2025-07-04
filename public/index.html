@@ -4,20 +4,45 @@
   <meta charset="UTF-8">
   <title>註冊碼產生器</title>
   <!-- Bootstrap 4 CDN -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- 新增行：響應式設置 -->
   <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+  <style>
+    /* 新增行：針對手機優化表單寬度與間距 */
+    body {
+      font-size: 1rem;
+    }
+    .container {
+      max-width: 480px;
+    }
+    @media (max-width: 576px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+      .container {
+        padding: 1rem 0.5rem;
+      }
+      .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+      #result .btn {
+        margin-bottom: 0;
+      }
+    }
+  </style>
 </head>
 <body class="bg-light">
   <div class="container py-5">
-    <h1 class="mb-4">註冊碼產生器</h1>
+    <h1 class="mb-4 text-center">註冊碼產生器</h1>
     <div id="alert" style="display:none;" class="alert"></div>
-    <form id="regForm">
+    <form id="regForm" autocomplete="off">
       <div class="mb-3">
         <label class="form-label">Machine Code</label>
-        <input type="text" name="machineCode" class="form-control" required>
+        <input type="text" name="machineCode" class="form-control" required autocomplete="off">
       </div>
       <div class="mb-3">
         <label class="form-label">Secret Key</label>
-        <input type="text" name="secretKey" class="form-control" required>
+        <input type="text" name="secretKey" class="form-control" required autocomplete="off">
       </div>
       <button type="submit" class="btn btn-primary">產生註冊碼</button>
     </form>
