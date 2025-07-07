@@ -61,20 +61,28 @@
       document.getElementById('result').style.display = 'none';
       const machineCode = this.machineCode.value;
       const secretKey = this.secretKey.value;
-      const res = await fetch('/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ machineCode, secretKey })
-      });
-      const data = await res.json();
-      if (data.error) {
+      try {
+        const res = await fetch('/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ machineCode, secretKey })
+        });
+        if (!res.ok) throw new Error('伺服器錯誤');
+        const data = await res.json();
+        if (data.error) {
+          const alert = document.getElementById('alert');
+          alert.className = 'alert alert-danger';
+          alert.innerText = data.error;
+          alert.style.display = '';
+        } else {
+          document.getElementById('regCode').innerText = data.regCode;
+          document.getElementById('result').style.display = 'block'; // 修正: 正確顯示區塊
+        }
+      } catch (err) {
         const alert = document.getElementById('alert');
         alert.className = 'alert alert-danger';
-        alert.innerText = data.error;
+        alert.innerText = '無法連線到伺服器，請確認後端已啟動。';
         alert.style.display = '';
-      } else {
-        document.getElementById('regCode').innerText = data.regCode;
-        document.getElementById('result').style.display = '';
       }
     });
 
