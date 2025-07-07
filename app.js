@@ -25,6 +25,7 @@ app.post('/generate', (req, res) => {
   res.json({ regCode });
 });
 
-app.listen(3000, () => {
-  console.log('Server started on http://localhost:3000');
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server started on http://localhost:${port}`);
 });
